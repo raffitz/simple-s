@@ -60,29 +60,32 @@ prompt_git() {
 	fi;
 }
 
+autoload -U colors && colors
+
 # Highlight the user name when logged in as root.
 if [[ "${USER}" == "root" ]]; then
-	userStyle="${red}";
+	userStyle="%{$fg[red]%}";
 else
-	userStyle="${orange}";
+	userStyle="%{$fg[001]%}";
 fi;
 
 # Highlight the hostname when connected via SSH.
 if [[ "${SSH_TTY}" ]]; then
-	hostStyle="${bold}${red}";
+	hostStyle="%{$fg_bold[red]%}";
 else
-	hostStyle="${yellow}";
+	hostStyle="%{$fg[yellow]%}";
 fi;
 
 # Set the terminal title to the current working directory.
 PROMPT="${userStyle}%n"; # username
-PROMPT+="${white} at ";
+PROMPT+="%{$fg[white]%} at ";
 PROMPT+="${hostStyle}%m"; # host
-PROMPT+="${white} in ";
-PROMPT+="${green}%~"; # working directory
-PROMPT+="\$(prompt_git \"${white} on ${purple}\" \"${blue}\")"; # Git repository details
-PROMPT+="\n";
-PROMPT+="${white}\$ ${reset}"; # `$` (and reset color)
+PROMPT+="%{$fg[white]%} in ";
+PROMPT+="%{$fg[green]%}%~"; # working directory
+PROMPT+="\$(prompt_git \"%{$fg[white]%} on %{$fg[magenta]%}\" \"%{$fg[blue]%}\")"; # Git repository details
+PROMPT+=$'\n'
+PROMPT+="%{$fg_bold[white]%}↪ %{$reset_color%}"; # `$` (and reset color)
 
-RPROMPT="${yellow}→ ${reset}";
+RPROMPT=""
+#RPROMPT="%{$fg_bold[yellow]%} %{$reset_color%}";
 export PS2;
