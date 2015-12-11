@@ -1,6 +1,6 @@
 <div align="center">
   <a href="https://github.com/robbyrussell/oh-my-zsh">
-  <img width=90px  src="http://ohmyz.sh/img/OMZLogo_BnW.png">
+  <img width=337px  src="http://ohmyz.sh/img/OMZLogo_BnW.png">
   </a>
 </div>
 <br>
@@ -12,7 +12,7 @@
 
 This is an attempt to port [Luis A. Fiolhais's][lfsap] Fish prompt to zsh.
 
-His prompt is built upon [Mathias Bynens's][mths] Bash prompt, which itself is inspired by [Nicolas Gallagher's][necola].
+His prompt is built upon [Mathias Bynens's][mths] Bash prompt, which itself is inspired by [Nicolas Gallagher's][necolas].
 
 # License
 
