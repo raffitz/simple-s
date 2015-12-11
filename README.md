@@ -12,7 +12,7 @@
 
 This is an attempt to port [Luis A. Fiolhais's][lfsap] Fish prompt to zsh.
 
-His prompt is built upon [Mathias Bynens's][mths] Bash prompt, which itself is inspired by [Nicolas Gallagher's][necolas].
+His (and this) prompt is built upon [Mathias Bynens's][mths] Bash prompt, which itself is inspired by [Nicolas Gallagher's][necolas].
 
 # License
 
