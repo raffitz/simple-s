@@ -75,16 +75,14 @@ else
 fi;
 
 # Set the terminal title to the current working directory.
-PROMPT="\[\033]0;\w\007\]";
-PROMPT+="\[${bold}\]\n"; # newline
-PROMPT+="\[${userStyle}\]\u"; # username
-PROMPT+="\[${white}\] at ";
-PROMPT+="\[${hostStyle}\]\h"; # host
-PROMPT+="\[${white}\] in ";
-PROMPT+="\[${green}\]\w"; # working directory
-PROMPT+="\$(prompt_git \"\[${white}\] on \[${purple}\]\" \"\[${blue}\]\")"; # Git repository details
+PROMPT="${userStyle}%n"; # username
+PROMPT+="${white} at ";
+PROMPT+="${hostStyle}%m"; # host
+PROMPT+="${white} in ";
+PROMPT+="${green}%~"; # working directory
+PROMPT+="\$(prompt_git \"${white} on ${purple}\" \"${blue}\")"; # Git repository details
 PROMPT+="\n";
-PROMPT+="\[${white}\]\$ \[${reset}\]"; # `$` (and reset color)
+PROMPT+="${white}\$ ${reset}"; # `$` (and reset color)
 
-RPROMPT="\[${yellow}\]→ \[${reset}\]";
+RPROMPT="${yellow}→ ${reset}";
 export PS2;
