@@ -59,3 +59,32 @@ prompt_git() {
 		return;
 	fi;
 }
+
+# Highlight the user name when logged in as root.
+if [[ "${USER}" == "root" ]]; then
+	userStyle="${red}";
+else
+	userStyle="${orange}";
+fi;
+
+# Highlight the hostname when connected via SSH.
+if [[ "${SSH_TTY}" ]]; then
+	hostStyle="${bold}${red}";
+else
+	hostStyle="${yellow}";
+fi;
+
+# Set the terminal title to the current working directory.
+PROMPT="\[\033]0;\w\007\]";
+PROMPT+="\[${bold}\]\n"; # newline
+PROMPT+="\[${userStyle}\]\u"; # username
+PROMPT+="\[${white}\] at ";
+PROMPT+="\[${hostStyle}\]\h"; # host
+PROMPT+="\[${white}\] in ";
+PROMPT+="\[${green}\]\w"; # working directory
+PROMPT+="\$(prompt_git \"\[${white}\] on \[${purple}\]\" \"\[${blue}\]\")"; # Git repository details
+PROMPT+="\n";
+PROMPT+="\[${white}\]\$ \[${reset}\]"; # `$` (and reset color)
+
+RPROMPT="\[${yellow}\]→ \[${reset}\]";
+export PS2;
