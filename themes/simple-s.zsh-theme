@@ -10,82 +10,104 @@
 # https://github.com/necolas/dotfiles
 ################################################################
 
+# Symbols are:
+#	✓	
+#	!	
+#	☡	
+#	↩	
+
 prompt_git() {
 	local s='';
 	local branchName='';
 
 	# Check if the current directory is in a Git repository.
-	if [ $(git rev-parse --is-inside-work-tree &>/dev/null; echo "${?}") == '0' ]; then
+	#if [ "$(git rev-parse --is-inside-work-tree &>/dev/null; echo "${?}")" == '0' ]; then
 
 		# check if the current directory is in .git before running git checks
-		if [ "$(git rev-parse --is-inside-git-dir 2> /dev/null)" == 'false' ]; then
+		#if [ "$(git rev-parse --is-inside-git-dir 2> /dev/null)" == 'false' ]; then
 
 			# Ensure the index is up to date.
-			git update-index --really-refresh -q &>/dev/null;
+		#	git update-index --really-refresh -q &>/dev/null;
 
 			# Check for uncommitted changes in the index.
-			if ! $(git diff --quiet --ignore-submodules --cached); then
+		#	if ! $(git diff --quiet --ignore-submodules --cached); then
 				s+='✓';
-			fi;
+		#	fi;
 
 			# Check for unstaged changes.
-			if ! $(git diff-files --quiet --ignore-submodules --); then
-				s+='!';
-			fi;
+		#	if ! $(git diff-files --quiet --ignore-submodules --); then
+		#		s+='!';
+		#	fi;
 
 			# Check for untracked files.
-			if [ -n "$(git ls-files --others --exclude-standard)" ]; then
-				s+='☡';
-			fi;
+		#	if [ -n "$(git ls-files --others --exclude-standard)" ]; then
+		#		s+='☡';
+		#	fi;
 
 			# Check for stashed files.
-			if $(git rev-parse --verify refs/stash &>/dev/null); then
-				s+='↩';
-			fi;
+		#	if $(git rev-parse --verify refs/stash &>/dev/null); then
+		#		s+='↩';
+		#	fi;
 
-		fi;
+		#fi;
 
 		# Get the short symbolic ref.
 		# If HEAD isn’t a symbolic ref, get the short SHA for the latest commit
 		# Otherwise, just give up.
-		branchName="$(git symbolic-ref --quiet --short HEAD 2> /dev/null || \
-			git rev-parse --short HEAD 2> /dev/null || \
-			echo '(unknown)')";
+		#branchName="$(git symbolic-ref --quiet --short HEAD 2> /dev/null || git rev-parse --short HEAD 2> /dev/null || echo '(unknown)')";
 
-		[ -n "${s}" ] && s=" [${s}]";
+		#[ -n "${s}" ] && s=" [${s}]";
 
-		echo -e "${1}${branchName}${2}${s}";
-	else
-		return;
-	fi;
+		#echo -e "${1}${branchName}${2}${s}";
+	#else
+	#	return;
+	#fi;
 }
+
+# Following function blatantly plagiarised from https://github.com/sorin-ionescu/prezto/
+# Original author is https://github.com/lunaryorn
+function prompt_sorin_pwd {
+	autoload -U regexp-replace
+
+	local abbreviated
+	local head
+
+	abbreviated="${PWD/#${HOME}/~}"
+	head="${abbreviated:h}"
+	regexp-replace head '/[^/]*' '/${MATCH:1:1}'
+	_prompt_sorin_pwd="${head}/${abbreviated:t}"
+  
+	echo $_prompt_sorin_pwd
+}
+# End of blatant plagiarising
 
 autoload -U colors && colors
 
 # Highlight the user name when logged in as root.
 if [[ "${USER}" == "root" ]]; then
-	userStyle="%{$fg[red]%}";
+	userStyle="%{$FG[001]%}";
 else
-	userStyle="%{$fg[001]%}";
+	userStyle="%{$FG[009]%}";
 fi;
 
 # Highlight the hostname when connected via SSH.
 if [[ "${SSH_TTY}" ]]; then
-	hostStyle="%{$fg_bold[red]%}";
+	hostStyle="%{$FG[001]%}%B";
+	hostEnd="%b";
 else
-	hostStyle="%{$fg[yellow]%}";
+	hostStyle="%{$FG[003]%}";
+	hostEnd="";
 fi;
 
 # Set the terminal title to the current working directory.
 PROMPT="${userStyle}%n"; # username
-PROMPT+="%{$fg[white]%} at ";
-PROMPT+="${hostStyle}%m"; # host
-PROMPT+="%{$fg[white]%} in ";
-PROMPT+="%{$fg[green]%}%~"; # working directory
-PROMPT+="\$(prompt_git \"%{$fg[white]%} on %{$fg[magenta]%}\" \"%{$fg[blue]%}\")"; # Git repository details
+PROMPT+="%{$FG[007]%} at ";
+PROMPT+="${hostStyle}%m${hostEnd}"; # host
+PROMPT+="%{$FG[007]%} in ";
+PROMPT+="%{$FG[002]%}\$(prompt_sorin_pwd)"; # working directory
+PROMPT+="\$(prompt_git \"%{$FG[007]%} on %{$FG[013]%}\" \"%{$FG[004]%}\")"; # Git repository details
 PROMPT+=$'\n'
-PROMPT+="%{$fg_bold[white]%}↪ %{$reset_color%}"; # `$` (and reset color)
+PROMPT+="%{$FG[007]%}%B↪%b %{$reset_color%}"; # `$` (and reset color)
 
 RPROMPT=""
-#RPROMPT="%{$fg_bold[yellow]%} %{$reset_color%}";
-export PS2;
+#RPROMPT="%{$FG_bold[yellow]%} %{$reset_color%}";
