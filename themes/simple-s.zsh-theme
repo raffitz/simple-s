@@ -16,57 +16,40 @@
 #	☡	
 #	↩	
 
-prompt_git() {
-	local s='';
-	local branchName='';
-	if [[ $(git rev-parse --is-inside-work-tree 2> /dev/null) == 'true' && -n $(git ls-files --others --exclude-standard | sed q) ]]; then
-		s+="☡";
-	fi
+function prompt_git {
+	local s="";
+	local branchName=$(git symbolic-ref --quiet --short HEAD 2> /dev/null || git rev-parse --short HEAD 2> /dev/null || echo '(unknown)');
 	
-	branchName=$(git symbolic-ref --short HEAD 2>/dev/null);
 	
 	# Check if the current directory is in a Git repository.
-	#if [ "$(git rev-parse --is-inside-work-tree &>/dev/null; echo "${?}")" == '0' ]; then
+	if [[ $(git rev-parse --is-inside-work-tree 2> /dev/null) == 'true' ]]; then
 
-		# check if the current directory is in .git before running git checks
-		#if [ "$(git rev-parse --is-inside-git-dir 2> /dev/null)" == 'false' ]; then
+		git update-index --really-refresh -q &>/dev/null;
 
-			# Ensure the index is up to date.
-		#	git update-index --really-refresh -q &>/dev/null;
+		# Check for uncommitted changes in the index.
+		if ! $(git diff --quiet --ignore-submodules --cached); then
+			s+='✓';
+		fi;
 
-			# Check for uncommitted changes in the index.
-		#	if ! $(git diff --quiet --ignore-submodules --cached); then
-				s+='✓';
-		#	fi;
+		# Check for unstaged changes.
+		if ! $(git diff-files --quiet --ignore-submodules --); then
+			s+='!';
+		fi;
 
-			# Check for unstaged changes.
-		#	if ! $(git diff-files --quiet --ignore-submodules --); then
-		#		s+='!';
-		#	fi;
+		# Check for untracked files.
+		if [ -n "$(git ls-files --others --exclude-standard)" ]; then
+			s+='☡';
+		fi;
 
-			# Check for untracked files.
-		#	if [ -n "$(git ls-files --others --exclude-standard)" ]; then
-		#		s+='☡';
-		#	fi;
+		# Check for stashed files.
+		if $(git rev-parse --verify refs/stash &>/dev/null); then
+			s+='↩';
+		fi;
 
-			# Check for stashed files.
-		#	if $(git rev-parse --verify refs/stash &>/dev/null); then
-		#		s+='↩';
-		#	fi;
-
-		#fi;
-
-		# Get the short symbolic ref.
-		# If HEAD isn’t a symbolic ref, get the short SHA for the latest commit
-		# Otherwise, just give up.
-		#branchName="$(git symbolic-ref --quiet --short HEAD 2> /dev/null || git rev-parse --short HEAD 2> /dev/null || echo '(unknown)')";
-
-		#[ -n "${s}" ] && s=" [${s}]";
+		[ -n "${s}" ] && s=" [${s}]";
 
 		echo -e "${1}${branchName}${2}${s}";
-	#else
-	#	return;
-	#fi;
+	fi;
 }
 
 # Following function blatantly plagiarised from https://github.com/sorin-ionescu/prezto/
@@ -106,13 +89,13 @@ fi;
 
 # Set the terminal title to the current working directory.
 PROMPT="${userStyle}%n"; # username
-PROMPT+="%{$FG[007]%} at ";
+PROMPT+="%{$FG[014]%} at ";
 PROMPT+="${hostStyle}%m${hostEnd}"; # host
-PROMPT+="%{$FG[007]%} in ";
+PROMPT+="%{$FG[014]%} in ";
 PROMPT+="%{$FG[002]%}\$(prompt_sorin_pwd)"; # working directory
-PROMPT+="\$(prompt_git \"%{$FG[007]%} on %{$FG[013]%}\" \"%{$FG[004]%}\")"; # Git repository details
+PROMPT+="\$(prompt_git \"%{$FG[014]%} on %{$FG[013]%}\" \"%{$FG[004]%}\")"; # Git repository details
 PROMPT+=$'\n'
-PROMPT+="%{$FG[007]%}%B↪%b %{$reset_color%}"; # `$` (and reset color)
+PROMPT+="%{$FG[014]%}%B↪%b %{$reset_color%}"; # `$` (and reset color)
 
 RPROMPT=""
 #RPROMPT="%{$FG_bold[yellow]%} %{$reset_color%}";
