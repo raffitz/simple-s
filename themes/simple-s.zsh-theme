@@ -45,6 +45,14 @@ function prompt_git {
 		if $(git rev-parse --verify refs/stash &>/dev/null); then
 			s+='↩';
 		fi;
+		
+		if [[ $(git rev-list "${branch_name}"@{upstream}..HEAD 2>/dev/null | wc -l) == true ]]; then
+			s+='+';
+		else
+			if [[ $(git rev-list HEAD.."${branch_name}"@{upstream} 2>/dev/null | wc -l) == true ]]; then
+				s+='-';
+			fi;
+		fi;
 
 		[ -n "${s}" ] && s=" [${s}]";
 
