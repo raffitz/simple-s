@@ -77,6 +77,12 @@ function prompt_sorin_pwd {
 }
 # End of blatant plagiarising
 
+function prompt_failed {
+	if [[ $? != 0 ]]; then
+		echo "%{$FG[001]%}%B✘%b%{$reset_color%}"
+	fi
+}
+
 autoload -U colors && colors
 
 # Highlight the user name when logged in as root.
@@ -105,5 +111,5 @@ PROMPT+="\$(prompt_git \"%{$FG[014]%} on %{$FG[013]%}\" \"%{$FG[004]%}\")"; # Gi
 PROMPT+=$'\n'
 PROMPT+="%{$FG[014]%}%B↪%b %{$reset_color%}"; # `$` (and reset color)
 
-RPROMPT=""
-#RPROMPT="%{$FG_bold[yellow]%} %{$reset_color%}";
+
+RPROMPT="\$(prompt_failed)"
