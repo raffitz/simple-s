@@ -19,7 +19,12 @@
 prompt_git() {
 	local s='';
 	local branchName='';
-
+	if [[ $(git rev-parse --is-inside-work-tree 2> /dev/null) == 'true' && -n $(git ls-files --others --exclude-standard | sed q) ]]; then
+		s+="☡";
+	fi
+	
+	branchName=$(git symbolic-ref --short HEAD 2>/dev/null);
+	
 	# Check if the current directory is in a Git repository.
 	#if [ "$(git rev-parse --is-inside-work-tree &>/dev/null; echo "${?}")" == '0' ]; then
 
@@ -58,7 +63,7 @@ prompt_git() {
 
 		#[ -n "${s}" ] && s=" [${s}]";
 
-		#echo -e "${1}${branchName}${2}${s}";
+		echo -e "${1}${branchName}${2}${s}";
 	#else
 	#	return;
 	#fi;
