@@ -46,10 +46,10 @@ function prompt_git {
 			s+='↩';
 		fi;
 		
-		if [[ $(git rev-list "${branch_name}"@{upstream}..HEAD 2>/dev/null | wc -l) == true ]]; then
+		if [[ $(git rev-list "${branch_name}"@{upstream}..HEAD 2>/dev/null | wc -l) != "0" ]]; then
 			s+='+';
 		else
-			if [[ $(git rev-list HEAD.."${branch_name}"@{upstream} 2>/dev/null | wc -l) == true ]]; then
+			if [[ $(git rev-list HEAD.."${branch_name}"@{upstream} 2>/dev/null | wc -l) != "0" ]]; then
 				s+='-';
 			fi;
 		fi;
