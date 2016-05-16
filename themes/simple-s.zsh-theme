@@ -16,9 +16,9 @@
 #	☡	
 #	↩	
 
-function prompt_git {
-	local s="";
-	local branchName=$(git symbolic-ref --quiet --short HEAD 2> /dev/null || git rev-parse --short HEAD 2> /dev/null || echo '(unknown)');
+prompt_git () {
+	s=""
+	branchName=$(git symbolic-ref --quiet --short HEAD 2> /dev/null || git rev-parse --short HEAD 2> /dev/null || echo '(unknown)')
 	
 	
 	# Check if the current directory is in a Git repository.
@@ -56,17 +56,14 @@ function prompt_git {
 
 		[ -n "${s}" ] && s=" [${s}]";
 
-		echo -e "${1}${branchName}${2}${s}";
+		echo -e "${1}${branchName}${2}${s}%{[00m%}";
 	fi;
 }
 
 # Following function blatantly plagiarised from https://github.com/sorin-ionescu/prezto/
 # Original author is https://github.com/lunaryorn
-function prompt_sorin_pwd {
+prompt_sorin_pwd () {
 	autoload -U regexp-replace
-
-	local abbreviated
-	local head
 
 	abbreviated="${PWD/#${HOME}/~}"
 	head="${abbreviated:h}"
@@ -77,39 +74,48 @@ function prompt_sorin_pwd {
 }
 # End of blatant plagiarising
 
-function prompt_failed {
+prompt_failed () {
 	if [[ $? != 0 ]]; then
-		echo "%{$FG[001]%}%B✘%b%{$reset_color%}"
+		echo "%{[01;38;05;1m%}✘%{[00m%}"
 	fi
 }
 
-autoload -U colors && colors
+prompt_simple-s_setup () {
+
+local -a schars
+autoload -Uz prompt_special_chars
+prompt_special_chars
 
 # Highlight the user name when logged in as root.
 if [[ "${USER}" == "root" ]]; then
-	userStyle="%{$FG[001]%}";
+	userStyle="%{[01;38;05;1m%}";
 else
-	userStyle="%{$FG[009]%}";
+	userStyle="%{[38;05;3m%}";
 fi;
 
 # Highlight the hostname when connected via SSH.
 if [[ "${SSH_TTY}" ]]; then
-	hostStyle="%{$FG[001]%}%B";
-	hostEnd="%b";
+	hostStyle="%{[01;38;05;9m%}";
+	hostEnd="%{[00m%}";
 else
-	hostStyle="%{$FG[003]%}";
-	hostEnd="";
+	hostStyle="%{[38;05;11m%}";
+	hostEnd="%{[00m%}";
 fi;
 
-# Set the terminal title to the current working directory.
-PROMPT="${userStyle}%n"; # username
-PROMPT+="%{$FG[014]%} at ";
-PROMPT+="${hostStyle}%m${hostEnd}"; # host
-PROMPT+="%{$FG[014]%} in ";
-PROMPT+="%{$FG[002]%}\$(prompt_sorin_pwd)"; # working directory
-PROMPT+="\$(prompt_git \"%{$FG[014]%} on %{$FG[013]%}\" \"%{$FG[004]%}\")"; # Git repository details
-PROMPT+=$'\n'
-PROMPT+="%{$FG[014]%}%B↪%b %{$reset_color%}"; # `$` (and reset color)
+setopt PROMPT_SUBST
+
+PS1="${userStyle}%n"; # username
+PS1+="%{[38;05;15m%} at ";
+PS1+="${hostStyle}%m${hostEnd}"; # host
+PS1+="%{[38;05;15m%} in ";
+PS1+="%{[38;05;2m%}\$(prompt_sorin_pwd)"; # working directory
+PS1+="\$(prompt_git \"%{[38;05;15m%} on %{[38;05;13m%}\" \"%{[38;05;4m%}\")"; # Git repository details
+PS1+=$'\n'
+PS1+="%{[01;38;05;15m%}↪%{[00m%} "; # `↪` (and reset color)
 
 
-RPROMPT="\$(prompt_failed)"
+RPS1="\$(prompt_failed)"
+
+}
+
+prompt_simple-s_setup "$@"
