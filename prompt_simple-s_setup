@@ -116,6 +116,8 @@ PS1+="%{[01;38;05;15m%}↪%{[00m%} "; # `↪` (and reset color)
 
 RPS1="\$(prompt_failed)"
 
+prompt_opts=(cr subst percent)
+
 }
 
 prompt_simple-s_setup "$@"

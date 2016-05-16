@@ -14,19 +14,15 @@ This is an attempt to port [Luis A. Fiolhais's][lfsap] Fish prompt to zsh.
 
 His (and this) prompt is built upon [Mathias Bynens's][mths] Bash prompt, which itself is inspired by [Nicolas Gallagher's][necsh].
 
-<!---
-
 ## Install
 
-Start by copying the theme file to your Oh My Zsh install folder:
+Run the install script:
 
-> cp themes/simple-s.zsh-theme $ZSH/themes
+> ./install.sh
 
-Next, change your .zshrc file's theme setting (by default near the top of the file):
+If you do not have sudo access, then run the install script like this:
 
-> ZSH_THEME="simple-s"
-
---->
+> ./install.sh nosudo
 
 # License
 
