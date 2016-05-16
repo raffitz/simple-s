@@ -1,11 +1,11 @@
 <div align="center">
-  <a href="https://github.com/robbyrussell/oh-my-zsh">
-  <img width=337px  src="http://ohmyz.sh/img/OMZLogo_BnW.png">
+  <a href="http://www.zsh.org">
+  <img width=64  src="http://zsh.sourceforge.net/Images/wizard.gif">
   </a>
 </div>
 <br>
 
-> A simple ass prompt for oh-my-zsh
+> A simple ass prompt for zsh
 
 
 ## Features
@@ -13,6 +13,8 @@
 This is an attempt to port [Luis A. Fiolhais's][lfsap] Fish prompt to zsh.
 
 His (and this) prompt is built upon [Mathias Bynens's][mths] Bash prompt, which itself is inspired by [Nicolas Gallagher's][necsh].
+
+<!---
 
 ## Install
 
@@ -23,6 +25,8 @@ Start by copying the theme file to your Oh My Zsh install folder:
 Next, change your .zshrc file's theme setting (by default near the top of the file):
 
 > ZSH_THEME="simple-s"
+
+--->
 
 # License
 
