@@ -111,7 +111,8 @@ PS1+="%{[38;05;15m%} in ";
 PS1+="%{[38;05;2m%}\$(prompt_sorin_pwd)"; # working directory
 PS1+="\$(prompt_git \"%{[38;05;15m%} on %{[38;05;13m%}\" \"%{[38;05;4m%}\")"; # Git repository details
 PS1+=$'\n'
-PS1+="%{[01;38;05;15m%}↪%{[00m%} "; # `↪` (and reset color)
+PS2="%{[01;38;05;15m%}↪%{[00m%} "; # `↪` (and reset color)
+PS1+=PS2
 
 
 RPS1="\$(prompt_failed)"
