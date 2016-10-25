@@ -62,15 +62,18 @@ prompt_git () {
 
 # Following function blatantly plagiarised from https://github.com/sorin-ionescu/prezto/
 # Original author is https://github.com/lunaryorn
-prompt_sorin_pwd () {
+# Modified by https://github.com/raffitz
+prompt_lunaryorn_pwd () {
 	autoload -U regexp-replace
 
 	abbreviated="${PWD/#${HOME}/~}"
 	head="${abbreviated:h}"
 	regexp-replace head '/[^/]*' '/${MATCH:1:1}'
-	_prompt_sorin_pwd="${head}/${abbreviated:t}"
+	_prompt_lunaryorn_pwd="${head}/${abbreviated:t}"
+	regexp-replace _prompt_lunaryorn_pwd '//' '/'
+	regexp-replace _prompt_lunaryorn_pwd './~' '~'
   
-	echo $_prompt_sorin_pwd
+	echo $_prompt_lunaryorn_pwd
 }
 # End of blatant plagiarising
 
@@ -108,7 +111,7 @@ PS1="${userStyle}%n"; # username
 PS1+="%{[38;05;15m%} at ";
 PS1+="${hostStyle}%m${hostEnd}"; # host
 PS1+="%{[38;05;15m%} in ";
-PS1+="%{[38;05;2m%}\$(prompt_sorin_pwd)"; # working directory
+PS1+="%{[38;05;2m%}\$(prompt_lunaryorn_pwd)"; # working directory
 PS1+="\$(prompt_git \"%{[38;05;15m%} on %{[38;05;13m%}\" \"%{[38;05;4m%}\")"; # Git repository details
 PS1+=$'\n'
 PS2="%{[01;38;05;15m%}↪%{[00m%} "; # `↪` (and reset color)
